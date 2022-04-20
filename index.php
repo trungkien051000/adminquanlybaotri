@@ -8,7 +8,7 @@ if(isset($_POST['login']))
 {
 $uname=$_POST['username'];
 $password=md5($_POST['password']);
-$sql ="SELECT UserName,Password FROM admin WHERE UserName=:uname and Password=:password";
+$sql ="SELECT taikhoan,matkhau FROM nhanvien WHERE taikhoan=:uname and matkhau=:password";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':uname', $uname, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);

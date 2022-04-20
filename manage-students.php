@@ -16,7 +16,7 @@ if(strlen($_SESSION['alogin'])=="")
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Admin Manage Students</title>
+        <title>Quản lý khách hàng</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -58,7 +58,7 @@ if(strlen($_SESSION['alogin'])=="")
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Manage Students</h2>
+                                    <h2 class="title">Quản lý khách hàng</h2>
                                 
                                 </div>
                                 
@@ -68,9 +68,9 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-            							<li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
-                                        <li> Students</li>
-            							<li class="active">Manage Students</li>
+            							<li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
+                                        <li> Khách hàng</li>
+            							<li class="active">Quản lý khách hàng</li>
             						</ul>
                                 </div>
                              
@@ -90,7 +90,7 @@ if(strlen($_SESSION['alogin'])=="")
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>View Students Info</h5>
+                                                    <h5>Xem thông tin khách hàng</h5>
                                                 </div>
                                             </div>
 <?php if($msg){?>
@@ -108,27 +108,28 @@ else if($error){?>
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>Student Name</th>
-                                                            <th>Roll Id</th>
-                                                            <th>Class</th>
-                                                            <th>Reg Date</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
+                                                            <th>Họ tên</th>
+                                                            <th>Doanh nghiệp</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Số điện thoại</th>
+                                                            <th>Tài khoản</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
                                                         <tr>
                                                           <th>#</th>
-                                                            <th>Student Name</th>
-                                                            <th>Roll Id</th>
-                                                            <th>Class</th>
-                                                            <th>Reg Date</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
+                                                            <th>Họ tên</th>
+                                                            <th>Doanh nghiệp</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Số điện thoại</th>
+                                                            <th>Tài khoản</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-<?php $sql = "SELECT tblstudents.StudentName,tblstudents.RollId,tblstudents.RegDate,tblstudents.StudentId,tblstudents.Status,tblclasses.ClassName,tblclasses.Section from tblstudents join tblclasses on tblclasses.id=tblstudents.ClassId";
+<?php $sql = "SELECT khachhang.MaKhachHang,khachhang.HoTen,khachhang.DoanhNghiep,khachhang.DienThoai,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP,khachhang.TaiKhoan
+            from khachhang left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP ";
 $query = $dbh->prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -139,19 +140,14 @@ foreach($results as $result)
 {   ?>
 <tr>
  <td><?php echo htmlentities($cnt);?></td>
-                                                            <td><?php echo htmlentities($result->StudentName);?></td>
-                                                            <td><?php echo htmlentities($result->RollId);?></td>
-                                                            <td><?php echo htmlentities($result->ClassName);?>(<?php echo htmlentities($result->Section);?>)</td>
-                                                            <td><?php echo htmlentities($result->RegDate);?></td>
-                                                             <td><?php if($result->Status==1){
-echo htmlentities('Active');
-}
-else{
-   echo htmlentities('Blocked'); 
-}
-                                                                ?></td>
+                                                            <td><?php echo htmlentities($result->HoTen);?></td>
+                                                            <td><?php echo htmlentities($result->DoanhNghiep);?></td>
+                                                            <td><?php echo htmlentities($result->DiaChi);?>, <?php echo htmlentities($result->TenPhuong);?>, <?php echo htmlentities($result->TenQuan);?>, <?php echo htmlentities($result->TenTP);?></td>
+                                                            <td><?php echo htmlentities($result->DienThoai);?></td>
+                                                            <td><?php echo htmlentities($result->TaiKhoan);?></td>
+                                                           
 <td>
-<a href="edit-student.php?stid=<?php echo htmlentities($result->StudentId);?>"><i class="fa fa-edit" title="Edit Record"></i> </a> 
+<a href="edit-student.php?stid=<?php echo htmlentities($result->MaKhachHang);?>"><i class="fa fa-edit" title="Edit Record"></i> </a> 
 
 </td>
 </tr>

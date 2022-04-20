@@ -19,7 +19,7 @@ $gender=$_POST['gender'];
 $classid=$_POST['class']; 
 $dob=$_POST['dob']; 
 $status=$_POST['status'];
-$sql="update tblstudents set StudentName=:studentname,RollId=:roolid,StudentEmail=:studentemail,Gender=:gender,DOB=:dob,Status=:status where StudentId=:stid ";
+$sql="update khachhang set Hoten=:studentname,RollId=:roolid,StudentEmail=:studentemail,Gender=:gender,DOB=:dob,Status=:status where StudentId=:stid ";
 $query = $dbh->prepare($sql);
 $query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
 $query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
@@ -111,7 +111,9 @@ else if($error){?>
                                                 <form class="form-horizontal" method="post">
 <?php 
 
-$sql = "SELECT tblstudents.StudentName,tblstudents.RollId,tblstudents.RegDate,tblstudents.StudentId,tblstudents.Status,tblstudents.StudentEmail,tblstudents.Gender,tblstudents.DOB,tblclasses.ClassName,tblclasses.Section from tblstudents join tblclasses on tblclasses.id=tblstudents.ClassId where tblstudents.StudentId=:stid";
+$sql = "SELECT *,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
+        from khachhang left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP 
+        where khachhang.MaKhachHang=:stid";
 $query = $dbh->prepare($sql);
 $query->bindParam(':stid',$stid,PDO::PARAM_STR);
 $query->execute();
@@ -124,30 +126,153 @@ foreach($results as $result)
 
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Full Name</label>
+<label for="default" class="col-sm-2 control-label">Mã khách hàng</label>
 <div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" value="<?php echo htmlentities($result->StudentName)?>" required="required" autocomplete="off">
+<input type="text" name="fullanme" class="form-control" id="fullanme" value="<?php echo htmlentities($result->MaKhachHang)?>" required="required" readonly autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Rool Id</label>
+<label for="default" class="col-sm-2 control-label">Họ tên</label>
 <div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" value="<?php echo htmlentities($result->RollId)?>" maxlength="5" required="required" autocomplete="off">
+<input type="text" name="rollid" class="form-control" id="rollid" value="<?php echo htmlentities($result->HoTen)?>" maxlength="5" required="required" autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Email id)</label>
+<label for="default" class="col-sm-2 control-label">Doanh nghiệp</label>
 <div class="col-sm-10">
-<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->StudentEmail)?>" required="required" autocomplete="off">
+<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->DoanhNghiep)?>" required="required" autocomplete="off">
 </div>
 </div>
-
-
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Gender</label>
+<label for="default" class="col-sm-2 control-label">Địa chỉ</label>
+<div class="col-sm-10">
+<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->DiaChi)?>" required="required" autocomplete="off">
+                    <div class="col-md-8 form-group">
+                      <select class="form-control" id="idthanhpho" name="idtp" >
+                        <?php
+                        include('includes/ketnoi.php');
+                        $tv="select * from thanhpho";
+                        $tv_1=mysqli_query($connect,$tv);
+                        echo '<option>';
+                        echo htmlentities($result->MaTP); echo ' - ' ;echo htmlentities($result->TenTP);
+                        echo '</option>';
+                        while($tv_2=mysqli_fetch_array($tv_1))
+                          {
+                            if($tv_2!=false)
+                            {
+                              echo '<option>';
+                              echo $tv_2['MaTP'].' - '.$tv_2['TenTP'];
+                              echo '</option>';
+                            }
+                            else
+                            {
+                              echo "&nbsp;";
+                            }
+                          }
+                        ?>
+                      </select>
+                    </div>
+    <div class="col-md-8 form-group">
+                      <input type="text" class="form-control" name="idq" id="idquan" list="Tất cả">
+                      <?php
+                        include('includes/ketnoi.php');
+                        echo '<datalist id = "Tất cả">';
+                        $tv="select * from quan";
+                        $tv_1=mysqli_query($connect,$tv);
+                        while($tv_2=mysqli_fetch_array($tv_1))
+                          {
+                            if($tv_2!=false)
+                            {
+                              echo '<option>';
+                              echo $tv_2['MaQuan']." - Quận ". $tv_2['TenQuan'];
+                              echo '</option>';
+                            }
+                          }
+                        echo '</datalist>';
+
+                        $_tv="select * from thanhpho";
+                        $_tv_1=mysqli_query($connect,$_tv);
+                        while($_tv_2=mysqli_fetch_array($_tv_1))
+                          {
+                            if($_tv_2!=false)
+                            {
+                              echo '<datalist id = "'.$_tv_2['MaTP'].' - '.$_tv_2['TenTP'].'">';
+                              $tv="select * from quan where MaTP = '".$_tv_2['MaTP']."'";
+                              $tv_1=mysqli_query($connect,$tv);
+                              while($tv_2=mysqli_fetch_array($tv_1))
+                                {
+                                  if($tv_2!=false)
+                                  {
+                                    echo '<option>';
+                                    echo $tv_2['MaQuan']." - Quận ". $tv_2['TenQuan'];
+                                    echo '</option>';
+                                  }
+                                }
+                              echo '</datalist>';
+                            }
+                          }
+                        ?>  
+                    </div>
+    <div class="col-md-8 form-group">
+      <input type="text" class="form-control" name="idp" id="idphuong" list="Tất cả phường">
+      <?php
+        include('includes/ketnoi.php');
+        echo '<datalist id = "Tất cả phường">';
+        $tv="select * from phuong";
+        $tv_1=mysqli_query($connect,$tv);
+        while($tv_2=mysqli_fetch_array($tv_1))
+          {
+            if($tv_2!=false)
+            {
+              echo '<option>';
+              echo $tv_2['MaPhuong']." - Phường ". $tv_2['TenPhuong'];
+              echo '</option>';
+            }
+          }
+        echo '</datalist>';
+
+        $_tv="select * from quan";
+        $_tv_1=mysqli_query($connect,$_tv);
+        while($_tv_2=mysqli_fetch_array($_tv_1))
+          {
+            if($_tv_2!=false)
+            {
+              echo '<datalist id = "'.$_tv_2['MaQuan'].' - '.$_tv_2['TenQuan'].'">';
+              $tv="select * from phuong where MaQuan = '".$_tv_2['MaQuan']."'";
+              $tv_1=mysqli_query($connect,$tv);
+              while($tv_2=mysqli_fetch_array($tv_1))
+                {
+                  if($tv_2!=false)
+                  {
+                    echo '<option>';
+                    echo $tv_2['MaPhuong']." - Phường ". $tv_2['TenPhuong'];
+                    echo '</option>';
+                  }
+                }
+              echo '</datalist>';
+            }
+          }
+        ?>  
+    </div>                
+</div>
+</div>
+<script type="text/javascript" language="javascript">
+                document.getElementById("idthanhpho").addEventListener("change", displayCar);
+                document.getElementById("idquan").addEventListener("change", displayCar2);
+                function displayCar() {
+                  var selected_value = document.getElementById("idthanhpho").value;
+                  document.getElementById("idquan").setAttribute('list', selected_value);
+                }
+                function displayCar2() {
+                  var selected_value2 = document.getElementById("idquan").value;
+                  document.getElementById("idphuong").setAttribute('list', selected_value2);
+                }
+              </script>
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">abc</label>
 <div class="col-sm-10">
 <?php  $gndr=$result->Gender;
 if($gndr=="Male")

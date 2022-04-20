@@ -99394,7 +99394,7 @@ window.pdfMake = window.pdfMake || {}; window.pdfMake.vfs = {"LICENSE.txt":"DQog
 			 *      } );
 			 *    } );
 			 */
-			"sSearch": "Search:",
+			"sSearch": "Tìm kiếm:",
 	
 	
 			/**
