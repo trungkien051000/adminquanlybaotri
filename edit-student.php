@@ -12,25 +12,40 @@ $stid=intval($_GET['stid']);
 
 if(isset($_POST['submit']))
 {
-$studentname=$_POST['fullanme'];
-$roolid=$_POST['rollid']; 
-$studentemail=$_POST['emailid']; 
-$gender=$_POST['gender']; 
-$classid=$_POST['class']; 
-$dob=$_POST['dob']; 
-$status=$_POST['status'];
-$sql="update khachhang set Hoten=:studentname,RollId=:roolid,StudentEmail=:studentemail,Gender=:gender,DOB=:dob,Status=:status where StudentId=:stid ";
+$hoten=$_POST['hoten'];
+$doanhnghiep=$_POST['doanhnghiep']; 
+$dienthoai=$_POST['dienthoai']; 
+$matkhau=md5($_POST['matkhau']); 
+$diachi=$_POST['diachi']; 
+$matp=$_POST['matp'];
+$maquan=$_POST['maquan']; 
+$maphuong=$_POST['maphuong'];
+
+$sql="
+update 
+    diachi,
+    khachhang
+set 
+    khachhang.HoTen=:hoten,
+    khachhang.DoanhNghiep=:doanhnghiep,
+    khachhang.DienThoai=:dienthoai,
+    khachhang.MatKhau=:matkhau,
+    diachi.MaPhuong=:maphuong ,
+    diachi.DiaChi=:diachi
+where 
+    khachhang.MaKhachHang =:stid AND
+    khachhang.MaDiaChi = diachi.MaDiaChi  ;";
 $query = $dbh->prepare($sql);
-$query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
-$query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
-$query->bindParam(':studentemail',$studentemail,PDO::PARAM_STR);
-$query->bindParam(':gender',$gender,PDO::PARAM_STR);
-$query->bindParam(':dob',$dob,PDO::PARAM_STR);
-$query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->bindParam(':hoten',$hoten,PDO::PARAM_STR);
+$query->bindParam(':doanhnghiep',$doanhnghiep,PDO::PARAM_STR);
+$query->bindParam(':dienthoai',$dienthoai,PDO::PARAM_STR);
+$query->bindParam(':matkhau',$matkhau,PDO::PARAM_STR);
+$query->bindParam(':maphuong',$maphuong,PDO::PARAM_STR);
+$query->bindParam(':diachi',$diachi,PDO::PARAM_STR);
 $query->bindParam(':stid',$stid,PDO::PARAM_STR);
 $query->execute();
 
-$msg="Student info updated successfully";
+$msg="Thông tin khách hàng đã thay đổi thành công !";
 }
 
 
@@ -41,7 +56,7 @@ $msg="Student info updated successfully";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SMS Admin| Edit Student < </title>
+        <title>Admin | Cập nhật thông tin khách hàng < </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -50,6 +65,33 @@ $msg="Student info updated successfully";
         <link rel="stylesheet" href="css/select2/select2.min.css" >
         <link rel="stylesheet" href="css/main.css" media="screen" >
         <script src="js/modernizr/modernizr.min.js"></script>
+        <script>
+function getQuan(val) {
+    $.ajax({
+    type: "POST",
+    url: "get_quan.php",
+    data:'matp='+val,
+    success: function(data){
+        $("#maquan").html(data);
+        
+    }
+    });
+}
+    </script>
+<script>
+
+function getPhuong(val) {
+    $.ajax({
+    type: "POST",
+    url: "get_phuong.php",
+    data:'maquan='+val,
+    success: function(data){
+        $("#maphuong").html(data);
+        
+    }
+    });
+}
+    </script>
     </head>
     <body class="top-navbar-fixed">
         <div class="main-wrapper">
@@ -69,7 +111,7 @@ $msg="Student info updated successfully";
                      <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Student Admission</h2>
+                                    <h2 class="title">Khách hàng</h2>
                                 
                                 </div>
                                 
@@ -79,9 +121,10 @@ $msg="Student info updated successfully";
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
                                 
-                                        <li class="active">Student Admission</li>
+                                        <li class="active"><a href="manage-students.php">Khách hàng</a></li>
+                                        <li class="active">Cập nhật thông tin</li>
                                     </ul>
                                 </div>
                              
@@ -95,17 +138,17 @@ $msg="Student info updated successfully";
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>Fill the Student info</h5>
+                                                    <h5>Thông tin khách hàng</h5>
                                                 </div>
                                             </div>
                                             <div class="panel-body">
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">
- <strong>Well done!</strong><?php echo htmlentities($msg); ?>
+ <strong>Hoàn tất!</strong><?php echo htmlentities($msg); ?>
  </div><?php } 
 else if($error){?>
     <div class="alert alert-danger left-icon-alert" role="alert">
-                                            <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
+                                            <strong>Thất bại! Cập nhật không thành công !</strong>
                                         </div>
                                         <?php } ?>
                                                 <form class="form-horizontal" method="post">
@@ -128,223 +171,98 @@ foreach($results as $result)
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Mã khách hàng</label>
 <div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" value="<?php echo htmlentities($result->MaKhachHang)?>" required="required" readonly autocomplete="off">
+<input type="text"class="form-control" value="<?php echo htmlentities($result->MaKhachHang)?>" required="required" readonly autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Họ tên</label>
 <div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" value="<?php echo htmlentities($result->HoTen)?>" maxlength="5" required="required" autocomplete="off">
+<input type="text" name="hoten" class="form-control" id="hoten" value="<?php echo htmlentities($result->HoTen)?>" required="required" autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Doanh nghiệp</label>
 <div class="col-sm-10">
-<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->DoanhNghiep)?>" required="required" autocomplete="off">
+<input type="text" name="doanhnghiep" class="form-control" id="doanhnghiep" value="<?php echo htmlentities($result->DoanhNghiep)?>" required="required" autocomplete="off">
+</div>
+</div>
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Số điện thoại</label>
+<div class="col-sm-10">
+<input type="text" name="dienthoai" class="form-control" id="dienthoai"  value="<?php echo htmlentities($result->DienThoai)?>" required="required" placeholder="0123456789" title="Vui lòng nhập đúng định dạng số điện thoại !" pattern="0[0-9\s.-]{9,13}" autocomplete="off">    
+</div>
+</div>
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Tài khoản</label>
+<div class="col-sm-10">
+<input type="text"   class="form-control"value="<?php echo htmlentities($result->TaiKhoan)?>" required="required"  readonly autocomplete="off">    
+</div>
+</div>
+
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Mật khẩu</label>
+<div class="col-sm-10">
+<input type="password" name="matkhau" class="form-control" id="matkhau" value="<?php echo htmlentities($result->MatKhau)?>" required="required"  autocomplete="off">    
 </div>
 </div>
 
 <div class="form-group">
 <label for="default" class="col-sm-2 control-label">Địa chỉ</label>
 <div class="col-sm-10">
-<input type="email" name="emailid" class="form-control" id="email" value="<?php echo htmlentities($result->DiaChi)?>" required="required" autocomplete="off">
-                    <div class="col-md-8 form-group">
-                      <select class="form-control" id="idthanhpho" name="idtp" >
-                        <?php
-                        include('includes/ketnoi.php');
-                        $tv="select * from thanhpho";
-                        $tv_1=mysqli_query($connect,$tv);
-                        echo '<option>';
-                        echo htmlentities($result->MaTP); echo ' - ' ;echo htmlentities($result->TenTP);
-                        echo '</option>';
-                        while($tv_2=mysqli_fetch_array($tv_1))
-                          {
-                            if($tv_2!=false)
-                            {
-                              echo '<option>';
-                              echo $tv_2['MaTP'].' - '.$tv_2['TenTP'];
-                              echo '</option>';
-                            }
-                            else
-                            {
-                              echo "&nbsp;";
-                            }
-                          }
-                        ?>
-                      </select>
-                    </div>
-    <div class="col-md-8 form-group">
-                      <input type="text" class="form-control" name="idq" id="idquan" list="Tất cả">
-                      <?php
-                        include('includes/ketnoi.php');
-                        echo '<datalist id = "Tất cả">';
-                        $tv="select * from quan";
-                        $tv_1=mysqli_query($connect,$tv);
-                        while($tv_2=mysqli_fetch_array($tv_1))
-                          {
-                            if($tv_2!=false)
-                            {
-                              echo '<option>';
-                              echo $tv_2['MaQuan']." - Quận ". $tv_2['TenQuan'];
-                              echo '</option>';
-                            }
-                          }
-                        echo '</datalist>';
-
-                        $_tv="select * from thanhpho";
-                        $_tv_1=mysqli_query($connect,$_tv);
-                        while($_tv_2=mysqli_fetch_array($_tv_1))
-                          {
-                            if($_tv_2!=false)
-                            {
-                              echo '<datalist id = "'.$_tv_2['MaTP'].' - '.$_tv_2['TenTP'].'">';
-                              $tv="select * from quan where MaTP = '".$_tv_2['MaTP']."'";
-                              $tv_1=mysqli_query($connect,$tv);
-                              while($tv_2=mysqli_fetch_array($tv_1))
-                                {
-                                  if($tv_2!=false)
-                                  {
-                                    echo '<option>';
-                                    echo $tv_2['MaQuan']." - Quận ". $tv_2['TenQuan'];
-                                    echo '</option>';
-                                  }
-                                }
-                              echo '</datalist>';
-                            }
-                          }
-                        ?>  
-                    </div>
-    <div class="col-md-8 form-group">
-      <input type="text" class="form-control" name="idp" id="idphuong" list="Tất cả phường">
-      <?php
-        include('includes/ketnoi.php');
-        echo '<datalist id = "Tất cả phường">';
-        $tv="select * from phuong";
-        $tv_1=mysqli_query($connect,$tv);
-        while($tv_2=mysqli_fetch_array($tv_1))
-          {
-            if($tv_2!=false)
-            {
-              echo '<option>';
-              echo $tv_2['MaPhuong']." - Phường ". $tv_2['TenPhuong'];
-              echo '</option>';
-            }
-          }
-        echo '</datalist>';
-
-        $_tv="select * from quan";
-        $_tv_1=mysqli_query($connect,$_tv);
-        while($_tv_2=mysqli_fetch_array($_tv_1))
-          {
-            if($_tv_2!=false)
-            {
-              echo '<datalist id = "'.$_tv_2['MaQuan'].' - '.$_tv_2['TenQuan'].'">';
-              $tv="select * from phuong where MaQuan = '".$_tv_2['MaQuan']."'";
-              $tv_1=mysqli_query($connect,$tv);
-              while($tv_2=mysqli_fetch_array($tv_1))
-                {
-                  if($tv_2!=false)
-                  {
-                    echo '<option>';
-                    echo $tv_2['MaPhuong']." - Phường ". $tv_2['TenPhuong'];
-                    echo '</option>';
-                  }
-                }
-              echo '</datalist>';
-            }
-          }
-        ?>  
-    </div>                
+<input type="text" name="diachi" class="form-control" id="diachi" value="<?php echo htmlentities($result->DiaChi)?>" required="required" autocomplete="off">    
 </div>
 </div>
-<script type="text/javascript" language="javascript">
-                document.getElementById("idthanhpho").addEventListener("change", displayCar);
-                document.getElementById("idquan").addEventListener("change", displayCar2);
-                function displayCar() {
-                  var selected_value = document.getElementById("idthanhpho").value;
-                  document.getElementById("idquan").setAttribute('list', selected_value);
-                }
-                function displayCar2() {
-                  var selected_value2 = document.getElementById("idquan").value;
-                  document.getElementById("idphuong").setAttribute('list', selected_value2);
-                }
-              </script>
+
+<!-- TEST OPTION ĐỊA CHỈ -->
+
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">abc</label>
-<div class="col-sm-10">
-<?php  $gndr=$result->Gender;
-if($gndr=="Male")
+<label for="default" class="col-sm-2 control-label">Thành phố</label>
+ <div class="col-sm-10">
+ <select name="matp" class="form-control clid" id="matp" onChange="getQuan(this.value);" required="required">
+<option value="">Chọn thành phố</option>
+<?php $sql = "SELECT * from thanhpho";
+$query = $dbh->prepare($sql);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+if($query->rowCount() > 0)
 {
-?>
-<input type="radio" name="gender" value="Male" required="required" checked>Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
-<?php }?>
-<?php  
-if($gndr=="Female")
-{
-?>
-<input type="radio" name="gender" value="Male" required="required" >Male <input type="radio" name="gender" value="Female" required="required" checked>Female <input type="radio" name="gender" value="Other" required="required">Other
-<?php }?>
-<?php  
-if($gndr=="Other")
-{
-?>
-<input type="radio" name="gender" value="Male" required="required" >Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required" checked>Other
-<?php }?>
-
-
-</div>
-</div>
-
-
+foreach($results as $result)
+{   ?>
+<option value="<?php echo htmlentities($result->MaTP); ?>"><?php echo htmlentities($result->TenTat); ?>&nbsp; - <?php echo htmlentities($result->TenTP); ?></option>
+<?php }} ?>
+ </select>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="form-group">
-                                                        <label for="default" class="col-sm-2 control-label">Class</label>
+                                                        <label for="date" class="col-sm-2 control-label ">Quận</label>
                                                         <div class="col-sm-10">
-<input type="text" name="classname" class="form-control" id="classname" value="<?php echo htmlentities($result->ClassName)?>(<?php echo htmlentities($result->Section)?>)" readonly>
+                                                    <select name="maquan" class="form-control stid" id="maquan" required="required" onChange="getPhuong(this.value);">
+                                                    </select>
                                                         </div>
                                                     </div>
-<div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label">DOB</label>
+
+                                                    <div class="form-group">
+                                                        <label for="date" class="col-sm-2 control-label ">Phường</label>
                                                         <div class="col-sm-10">
-                <input type="date"  name="dob" class="form-control" value="<?php echo htmlentities($result->DOB)?>" id="date">
+                                                    <select name="maphuong" class="form-control stid" id="maphuong" required="required" >
+                                                    </select>
                                                         </div>
-                                                    </div>
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Reg Date: </label>
-<div class="col-sm-10">
-<?php echo htmlentities($result->RegDate)?>
-</div>
-</div>
+                                                    </div>                                          
+                                                    
 
-<div class="form-group">
-<label for="default" class="col-sm-2 control-label">Status</label>
-<div class="col-sm-10">
-<?php  $stats=$result->Status;
-if($stats=="1")
-{
-?>
-<input type="radio" name="status" value="1" required="required" checked>Active <input type="radio" name="status" value="0" required="required">Block 
-<?php }?>
-<?php  
-if($stats=="0")
-{
-?>
-<input type="radio" name="status" value="1" required="required" >Active <input type="radio" name="status" value="0" required="required" checked>Block 
-<?php }?>
-
-
-
-</div>
-</div>
+<!-- TEST OPTION ĐỊA CHỈ -->
 
 <?php }} ?>                                                    
 
                                                     
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                                            <button type="submit" name="submit" class="btn btn-primary">Cập nhật</button>
                                                         </div>
                                                     </div>
                                                 </form>

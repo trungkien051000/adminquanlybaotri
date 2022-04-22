@@ -95,7 +95,7 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
                                                 </div>
                                             </div>
                                             <!-- /.panel -->
-                                           <p class="text-muted text-center"><small>Copyright © <a href="http://facebook.com/trungkien051000">Bạch Trung Ki</a> 2017</small></p>
+                                           <p class="text-muted text-center"><small>Copyright © <a href="http://facebook.com/trungkien051000">Bạch Trung Kiên</a> - 1811505310121</small></p>
                                         </div>
                                         <!-- /.col-md-11 -->
                                     </div>

@@ -22,7 +22,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `thanhpho` (
-  `MaTP` varchar(10) NOT NULL PRIMARY KEY,
+  `MaTP` int(10) NOT NULL PRIMARY KEY,
+  `TenTat` varchar(50)  NOT NULL,
   `TenTP` varchar(100) NOT NULL,
   `CreationDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
@@ -32,10 +33,10 @@ CREATE TABLE `thanhpho` (
 -- Dumping data for table `ThanhPho`
 --
 
-INSERT INTO `thanhpho` (`MaTP`, `TenTP`,`CreationDate`,`updationDate`) VALUES
-('DN', N'Đà Nẵng', '2022-04-19 09:37:14', '0000-00-00 00:00:00'),
-('HN', N'Hà Nội', '2022-04-19 09:37:34', '0000-00-00 00:00:00'),
-('HCM', N'Hồ Chí Minh', '2022-04-19 09:37:40', '0000-00-00 00:00:00');
+INSERT INTO `thanhpho` (`MaTP`,`TenTat`, `TenTP`,`CreationDate`,`updationDate`) VALUES
+(1,'DN', N'Đà Nẵng', '2022-04-19 09:37:14', '0000-00-00 00:00:00'),
+(2,'HN', N'Hà Nội', '2022-04-19 09:37:34', '0000-00-00 00:00:00'),
+(3,'HCM', N'Hồ Chí Minh', '2022-04-19 09:37:40', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -44,8 +45,8 @@ INSERT INTO `thanhpho` (`MaTP`, `TenTP`,`CreationDate`,`updationDate`) VALUES
 --
 
 CREATE TABLE `quan` (
-  `MaQuan` varchar(10) NOT NULL PRIMARY KEY,
-  `MaTP` varchar(10)  NOT NULL,
+  `MaQuan` int(10) NOT NULL PRIMARY KEY,
+  `MaTP` int(10)  NOT NULL,
   `TenQuan` varchar(100) NOT NULL,
   `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -57,13 +58,13 @@ CREATE TABLE `quan` (
 --
 
 INSERT INTO `quan` (`MaQuan`, `MaTP`,`TenQuan`,`CreationDate`,`updationDate`) VALUES
-('HC', 'DN',N'Hải Châu', '2022-04-19 09:45:10', '0000-00-00 00:00:00'),
-('ST', 'DN',N'Sơn Trà', '2022-04-19 09:45:21', '0000-00-00 00:00:00'),
-('NHS', 'DN',N'Ngũ Hành Sơn', '2022-04-19 09:45:33', '0000-00-00 00:00:00'),
-('HK', 'HN', N'Hoàn Kiếm', '2022-04-19 09:45:47', '0000-00-00 00:00:00'),
-('CG', 'HN', N'Cầu Giấy', '2022-04-19 09:45:55', '0000-00-00 00:00:00'),
-('GV', 'HCM', N'Gò Vấp', '2022-04-19 09:46:05', '0000-00-00 00:00:00'),
-('PN', 'HCM', N'Phú Nhuận', '2022-04-19 09:46:20', '0000-00-00 00:00:00');
+(1, 1,N'Hải Châu', '2022-04-19 09:45:10', '0000-00-00 00:00:00'),
+(2, 1,N'Sơn Trà', '2022-04-19 09:45:21', '0000-00-00 00:00:00'),
+(3, 1,N'Ngũ Hành Sơn', '2022-04-19 09:45:33', '0000-00-00 00:00:00'),
+(4, 2, N'Hoàn Kiếm', '2022-04-19 09:45:47', '0000-00-00 00:00:00'),
+(5, 2, N'Cầu Giấy', '2022-04-19 09:45:55', '0000-00-00 00:00:00'),
+(6, 3, N'Gò Vấp', '2022-04-19 09:46:05', '0000-00-00 00:00:00'),
+(7, 3, N'Phú Nhuận', '2022-04-19 09:46:20', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -72,8 +73,8 @@ INSERT INTO `quan` (`MaQuan`, `MaTP`,`TenQuan`,`CreationDate`,`updationDate`) VA
 --
 
 CREATE TABLE `phuong` (
-  `MaPhuong` varchar(10) NOT NULL PRIMARY KEY,
-  `MaQuan` varchar(10)  NOT NULL,
+  `MaPhuong` int(10) NOT NULL PRIMARY KEY,
+  `MaQuan` int(10)  NOT NULL,
   `TenPhuong` varchar(100) NOT NULL,
   `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -85,13 +86,13 @@ CREATE TABLE `phuong` (
 --
 
 INSERT INTO `phuong` (`MaPhuong`, `MaQuan`,`TenPhuong`,`CreationDate`,`updationDate`) VALUES
-('TB', 'HC',N'Thanh Bình', '2022-04-19 10:07:00', '0000-00-00 00:00:00'),
-('AHB', 'ST',N'An Hải Bắc', '2022-04-19 10:07:08', '0000-00-00 00:00:00'),
-('MA', 'NHS',N'Mỹ An', '2022-04-19 10:07:11', '0000-00-00 00:00:00'),
-('CD', 'HK', N'Chương Dương', '2022-04-19 10:07:13', '0000-00-00 00:00:00'),
-('MD', 'CG', N'Mai Dịch', '2022-04-19 10:07:17', '0000-00-00 00:00:00'),
-('P15', 'GV', N'Phường 15', '2022-04-19 10:07:20', '0000-00-00 00:00:00'),
-('P04', 'PN', N'Phường 04', '2022-04-19 10:07:34', '0000-00-00 00:00:00');
+(1, 1,N'Thanh Bình', '2022-04-19 10:07:00', '0000-00-00 00:00:00'),
+(2, 2,N'An Hải Bắc', '2022-04-19 10:07:08', '0000-00-00 00:00:00'),
+(3, 3,N'Mỹ An', '2022-04-19 10:07:11', '0000-00-00 00:00:00'),
+(4, 4, N'Chương Dương', '2022-04-19 10:07:13', '0000-00-00 00:00:00'),
+(5, 5, N'Mai Dịch', '2022-04-19 10:07:17', '0000-00-00 00:00:00'),
+(6, 6, N'Phường 15', '2022-04-19 10:07:20', '0000-00-00 00:00:00'),
+(7, 7, N'Phường 04', '2022-04-19 10:07:34', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -101,7 +102,7 @@ INSERT INTO `phuong` (`MaPhuong`, `MaQuan`,`TenPhuong`,`CreationDate`,`updationD
 
 CREATE TABLE `diachi` (
   `MaDiaChi` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `MaPhuong` varchar(10)  NOT NULL,
+  `MaPhuong` int(10)  NOT NULL,
   `DiaChi` varchar(100) NOT NULL,
   `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -113,21 +114,21 @@ CREATE TABLE `diachi` (
 --
 
 INSERT INTO `diachi` (`MaDiaChi`, `MaPhuong`,`DiaChi`,`CreationDate`,`updationDate`) VALUES
-(1, 'TB',N'12 Ông Ích Khiêm', '2022-04-19 10:32:03', '0000-00-00 00:00:00'),
-(2, 'AHB',N'129 Nguyễn Trung Trực', '2022-04-19 10:32:04', '0000-00-00 00:00:00'),
-(3, 'MA',N'368 Ngũ Hành Sơn', '2022-04-19 10:32:05', '0000-00-00 00:00:00'),
-(4, 'CD',N'68 Bạch Đằng', '2022-04-19 10:32:11', '0000-00-00 00:00:00'),
-(5, 'MD',N'64 Trần Vỹ', '2022-04-19 10:32:12', '0000-00-00 00:00:00'),
-(6, 'P15',N'862 Lê Đức Thọ', '2022-04-19 10:32:14', '0000-00-00 00:00:00'),
-(7, 'P04',N'706 Nguyễn Kiệm', '2022-04-19 10:32:17', '0000-00-00 00:00:00'),
-(8, 'TB',N'255 Nguyễn Tất Thành', '2022-04-19 10:32:20', '0000-00-00 00:00:00'),
-(9, 'TB',N'43 Hải Hồ', '2022-04-19 10:32:22', '0000-00-00 00:00:00'),
-(10, 'TB',N'4 Thanh Thủy', '2022-04-19 10:32:23', '0000-00-00 00:00:00'),
-(11, 'AHB',N'26 Nguyễn Thế Lộc', '2022-04-19 10:32:34', '0000-00-00 00:00:00'),
-(12, 'TB',N'K21/20 Ông Ích Khiêm', '2022-04-19 10:32:37', '0000-00-00 00:00:00'),
-(13, 'AHB',N'267 Trần Hưng Đạo', '2022-04-19 10:32:40', '0000-00-00 00:00:00'),
-(14, 'MA',N'48 Phan Tứ', '2022-04-19 10:32:44', '0000-00-00 00:00:00'),
-(15, 'TB',N'138 Ông Ích Khiêm', '2022-04-19 10:32:47', '0000-00-00 00:00:00');
+(1, 1,N'12 Ông Ích Khiêm', '2022-04-19 10:32:03', '0000-00-00 00:00:00'),
+(2, 2,N'129 Nguyễn Trung Trực', '2022-04-19 10:32:04', '0000-00-00 00:00:00'),
+(3, 3,N'368 Ngũ Hành Sơn', '2022-04-19 10:32:05', '0000-00-00 00:00:00'),
+(4, 4,N'68 Bạch Đằng', '2022-04-19 10:32:11', '0000-00-00 00:00:00'),
+(5, 5,N'64 Trần Vỹ', '2022-04-19 10:32:12', '0000-00-00 00:00:00'),
+(6, 6,N'862 Lê Đức Thọ', '2022-04-19 10:32:14', '0000-00-00 00:00:00'),
+(7, 7,N'706 Nguyễn Kiệm', '2022-04-19 10:32:17', '0000-00-00 00:00:00'),
+(8, 1,N'255 Nguyễn Tất Thành', '2022-04-19 10:32:20', '0000-00-00 00:00:00'),
+(9, 1,N'43 Hải Hồ', '2022-04-19 10:32:22', '0000-00-00 00:00:00'),
+(10, 1,N'4 Thanh Thủy', '2022-04-19 10:32:23', '0000-00-00 00:00:00'),
+(11, 2,N'26 Nguyễn Thế Lộc', '2022-04-19 10:32:34', '0000-00-00 00:00:00'),
+(12, 1,N'K21/20 Ông Ích Khiêm', '2022-04-19 10:32:37', '0000-00-00 00:00:00'),
+(13, 2,N'267 Trần Hưng Đạo', '2022-04-19 10:32:40', '0000-00-00 00:00:00'),
+(14, 3,N'48 Phan Tứ', '2022-04-19 10:32:44', '0000-00-00 00:00:00'),
+(15, 1,N'138 Ông Ích Khiêm', '2022-04-19 10:32:47', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -155,12 +156,12 @@ CREATE TABLE `nhanvien` (
 --
 
 INSERT INTO `nhanvien` (`MaNhanVien`, `HoTen`,`NgaySinh`,`GioiTinh`, `Email`,`DienThoai`,`MaDiaChi`, `TaiKhoan`,`MatKhau`,`CreationDate`,`updationDate`) VALUES
-(1, N'Bạch Trung Kiên','05/10/2000','Nam','1811505310121@sv.ute.udn.vn','0123456789',1,'admin','21232f297a57a5a743894a0e4a801fc3', '2022-04-19 10:55:01', '0000-00-00 00:00:00'),
-(2, N'Lê Văn Luyện','18/10/1993','Nam','levanluyen123@gmail.com','0231456789',2,'levanluyen','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:04', '0000-00-00 00:00:00'),
-(3, N'Lê Tùng Vân','01/01/1932','Nam','letungvan1932@gmail.com','0312456789',3,'letungvan','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:13', '0000-00-00 00:00:00'),
-(4, N'demo','02/02/2002',N'Nữ','demo@gmail.com','0321456789',4,'demo','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:24', '0000-00-00 00:00:00'),
-(5, N'Nguyễn Văn An','07/12/2001','Nam','andeptrai@gmail.com','0456123789',5,'nguyenvanan','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:35', '0000-00-00 00:00:00'),
-(6, N'Thị Nở','24/04/1936',N'Nữ','thinocute@gmail.com','0654123789',6,'thino','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:47', '0000-00-00 00:00:00');
+(1, N'Bạch Trung Kiên','2000-10-05','Nam','1811505310121@sv.ute.udn.vn','0123456789',1,'admin','21232f297a57a5a743894a0e4a801fc3', '2022-04-19 10:55:01', '0000-00-00 00:00:00'),
+(2, N'Lê Văn Luyện','1993-10-18','Nam','levanluyen123@gmail.com','0231456789',2,'levanluyen','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:04', '0000-00-00 00:00:00'),
+(3, N'Lê Tùng Vân','1932-01-01','Nam','letungvan1932@gmail.com','0312456789',3,'letungvan','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:13', '0000-00-00 00:00:00'),
+(4, N'demo','2002-02-02',N'Nữ','demo@gmail.com','0321456789',4,'demo','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:24', '0000-00-00 00:00:00'),
+(5, N'Nguyễn Văn An','2001-12-07','Nam','andeptrai@gmail.com','0456123789',5,'nguyenvanan','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:35', '0000-00-00 00:00:00'),
+(6, N'Thị Nở','1936-04-24',N'Nữ','thinocute@gmail.com','0654123789',6,'thino','fe01ce2a7fbac8fafaed7c982a04e229', '2022-04-19 10:55:47', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -410,6 +411,30 @@ INSERT INTO `baotri` (`MaBaoTri`, `MaNhanVien`,`MaKhachHang`,`MaBinhLuan`, `Tieu
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Trang Thai Bao Tri`
+--
+
+CREATE TABLE `trangthai` (
+  `MaTrangThai` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `TrangThai` varchar(256) NOT NULL,
+  `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `Trang Thai Bao Tri`
+--
+
+INSERT INTO `trangthai` (`MaTrangThai`, `TrangThai`,`CreationDate`,`updationDate`) VALUES
+(1,N'Mới', '2022-04-19 15:16:01', '0000-00-00 00:00:00'),
+(2,N'Đang tiến hành', '2022-04-19 15:16:02', '0000-00-00 00:00:00'),
+(3,N'Hoàn thành', '2022-04-19 15:16:03', '0000-00-00 00:00:00'),
+(4,N'Phản hồi', '2022-04-19 15:16:04', '0000-00-00 00:00:00'),
+(5,N'Đóng', '2022-04-19 15:16:05', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `Chi Tiet Bao Tri`
 --
 
@@ -420,24 +445,25 @@ CREATE TABLE `chitietbaotri` (
   `NgayKetThuc` date NOT NULL,
   `NgayHoanThanh` date  NULL,
   `TienDo` varchar(100) NOT NULL,
-  `Trang Thai` varchar(100) NOT NULL,
+  `MaTrangThai` int(10) NOT NULL,
   `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updationDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   KEY `baotri`(`MaBaoTri`),
-  KEY `thietbi`(`MaThietBi`)
+  KEY `thietbi`(`MaThietBi`),
+  KEY `trangthai`(`MaTrangThai`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `Chi Tiet Bao Tri`
 --
 
-INSERT INTO `chitietbaotri` (`MaBaoTri`, `MaThietBi`,`NgayBatDau`,`NgayKetThuc`, `NgayHoanThanh`,`TienDo`,`Trang Thai`,`CreationDate`,`updationDate`) VALUES
-(1,1,'2022-04-19','2022-04-19','2022-04-19','100%',N'Đóng' ,'2022-04-19 16:41:01', '0000-00-00 00:00:00'),
-(2,2,'2022-04-20','2022-04-21',NULL,'50%',N'Đang tiến hành' ,'2022-04-19 16:41:02', '0000-00-00 00:00:00'),
-(3,3,'2022-04-21','2022-04-23',NULL,'0%',N'Phản hồi' ,'2022-04-19 16:41:04', '0000-00-00 00:00:00'),
-(4,4,'2022-04-22','2022-04-22','2022-04-22','100%',N'Đóng' ,'2022-04-19 16:41:12', '0000-00-00 00:00:00'),
-(5,5,'2022-04-23','2022-04-25',NULL,'80%',N'Đang tiến hành', '2022-04-19 16:41:21', '0000-00-00 00:00:00'),
-(6,6,'2022-04-24','2022-04-24','2022-04-24','100%',N'Hoàn thành' ,'2022-04-19 16:41:45', '0000-00-00 00:00:00');
+INSERT INTO `chitietbaotri` (`MaBaoTri`, `MaThietBi`,`NgayBatDau`,`NgayKetThuc`, `NgayHoanThanh`,`TienDo`,`MaTrangThai`,`CreationDate`,`updationDate`) VALUES
+(1,1,'2022-04-19','2022-04-19','2022-04-19','100%',3 ,'2022-04-19 16:41:01', '0000-00-00 00:00:00'),
+(2,2,'2022-04-20','2022-04-21',NULL,'50%',2 ,'2022-04-19 16:41:02', '0000-00-00 00:00:00'),
+(3,3,'2022-04-21','2022-04-23',NULL,'0%',4 ,'2022-04-19 16:41:04', '0000-00-00 00:00:00'),
+(4,4,'2022-04-22','2022-04-22','2022-04-22','100%',5 ,'2022-04-19 16:41:12', '0000-00-00 00:00:00'),
+(5,5,'2022-04-23','2022-04-25',NULL,'80%',2, '2022-04-19 16:41:21', '0000-00-00 00:00:00'),
+(6,6,'2022-04-24','2022-04-24','2022-04-24','100%',3 ,'2022-04-19 16:41:45', '0000-00-00 00:00:00');
 
 
 -- --------------------------------------------------------

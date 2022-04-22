@@ -9,33 +9,40 @@ if(strlen($_SESSION['alogin'])=="")
     else{
 if(isset($_POST['submit']))
 {
-$studentname=$_POST['fullanme'];
-$roolid=$_POST['rollid']; 
-$studentemail=$_POST['emailid']; 
-$gender=$_POST['gender']; 
-$classid=$_POST['class']; 
-$dob=$_POST['dob']; 
-$status=1;
-$sql="INSERT INTO  tblstudents(StudentName,RollId,StudentEmail,Gender,ClassId,DOB,Status) VALUES(:studentname,:roolid,:studentemail,:gender,:classid,:dob,:status)";
+$makhachhang=$_POST['makhachhang'];
+$hoten=$_POST['hoten']; 
+$diachi=$_POST['diachi']; 
+$maphuong=$_POST['maphuong']; 
+$doanhnghiep=$_POST['doanhnghiep']; 
+$dienthoai=$_POST['dienthoai']; 
+$taikhoan=$_POST['taikhoan']; 
+$matkhau=md5($_POST['matkhau']); 
+$sql="INSERT INTO diachi(MaPhuong,DiaChi)
+        VALUES (:maphuong,:diachi);
+
+    INSERT INTO  khachhang(MaDiaChi,HoTen,DoanhNghiep,DienThoai,TaiKhoan,MatKhau)
+    SELECT MaDiaChi,:hoten,:doanhnghiep,:dienthoai,:taikhoan,:matkhau
+    FROM diachi
+    WHERE diachi.MaDiaChi=(SELECT MAX(MaDiaChi)
+                            FROM diachi)";
 $query = $dbh->prepare($sql);
-$query->bindParam(':studentname',$studentname,PDO::PARAM_STR);
-$query->bindParam(':roolid',$roolid,PDO::PARAM_STR);
-$query->bindParam(':studentemail',$studentemail,PDO::PARAM_STR);
-$query->bindParam(':gender',$gender,PDO::PARAM_STR);
-$query->bindParam(':classid',$classid,PDO::PARAM_STR);
-$query->bindParam(':dob',$dob,PDO::PARAM_STR);
-$query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->bindParam(':hoten',$hoten,PDO::PARAM_STR);
+$query->bindParam(':diachi',$diachi,PDO::PARAM_STR);
+$query->bindParam(':maphuong',$maphuong,PDO::PARAM_STR);
+$query->bindParam(':doanhnghiep',$doanhnghiep,PDO::PARAM_STR);
+$query->bindParam(':dienthoai',$dienthoai,PDO::PARAM_STR);
+$query->bindParam(':taikhoan',$taikhoan,PDO::PARAM_STR);
+$query->bindParam(':matkhau',$matkhau,PDO::PARAM_STR);
 $query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
+
+if($makhachhang != "" && $diachi != "" &&$hoten != "" &&$doanhnghiep != "" &&$dienthoai != "" &&$taikhoan != "" && $matkhau != "")
 {
-$msg="Student info added successfully";
+$msg="Thêm khách hàng thành công";
 }
 else 
 {
-$error="Something went wrong. Please try again";
+$error="Vui lòng nhập đầy đủ tất cả thông tin";
 }
-
 }
 ?>
 <!DOCTYPE html>
@@ -44,7 +51,7 @@ $error="Something went wrong. Please try again";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SMS Admin| Student Admission< </title>
+        <title>Admin| Khách hàng< </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -53,6 +60,33 @@ $error="Something went wrong. Please try again";
         <link rel="stylesheet" href="css/select2/select2.min.css" >
         <link rel="stylesheet" href="css/main.css" media="screen" >
         <script src="js/modernizr/modernizr.min.js"></script>
+        <script>
+function getQuan(val) {
+    $.ajax({
+    type: "POST",
+    url: "get_quan.php",
+    data:'matp='+val,
+    success: function(data){
+        $("#maquan").html(data);
+        
+    }
+    });
+}
+    </script>
+<script>
+
+function getPhuong(val) {
+    $.ajax({
+    type: "POST",
+    url: "get_phuong.php",
+    data:'maquan='+val,
+    success: function(data){
+        $("#maphuong").html(data);
+        
+    }
+    });
+}
+    </script>
     </head>
     <body class="top-navbar-fixed">
         <div class="main-wrapper">
@@ -72,7 +106,7 @@ $error="Something went wrong. Please try again";
                      <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Student Admission</h2>
+                                    <h2 class="title">Khách Hàng</h2>
                                 
                                 </div>
                                 
@@ -82,9 +116,10 @@ $error="Something went wrong. Please try again";
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
                                 
-                                        <li class="active">Student Admission</li>
+                                        <li class="active">Khách hàng</li>
+                                        <li class="active">Thêm khách hàng</li>
                                     </ul>
                                 </div>
                              
@@ -98,66 +133,93 @@ $error="Something went wrong. Please try again";
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>Fill the Student info</h5>
+                                                    <h5>Xem thông tin khách hàng</h5>
                                                 </div>
                                             </div>
                                             <div class="panel-body">
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">
- <strong>Well done!</strong><?php echo htmlentities($msg); ?>
+ <strong>Hoàn tất!</strong><?php echo htmlentities($msg); ?>
  </div><?php } 
 else if($error){?>
     <div class="alert alert-danger left-icon-alert" role="alert">
-                                            <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
+                                            <strong>Thất bại!</strong> <?php echo htmlentities($error); ?>
                                         </div>
                                         <?php } ?>
                                                 <form class="form-horizontal" method="post">
+                                                <div class="form-group">
+<?php $sql= "SELECT MaKhachHang  FROM khachhang" ;
+$query = $dbh->prepare($sql);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+$max = 0;
+if($query -> rowCount()>0){
+    foreach($results as $result)
+    {   
+        if($result->MaKhachHang > $max)
+        {
+            $max = $result->MaKhachHang;
+        }      
+    }
+}
+?>
+
+<label for="default" class="col-sm-2 control-label">Mã khách hàng</label>
+<div class="col-sm-10">
+<input type="text"class="form-control" name="makhachhang" value="<?php echo $max +1?>" required="required" readonly autocomplete="off">
+</div>
+</div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Full Name</label>
+<label for="default" class="col-sm-2 control-label">Họ tên</label>
 <div class="col-sm-10">
-<input type="text" name="fullanme" class="form-control" id="fullanme" required="required" autocomplete="off">
+<input type="text" name="hoten" class="form-control" id="hoten"  required="required" autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Rool Id</label>
+<label for="default" class="col-sm-2 control-label">Doanh nghiệp</label>
 <div class="col-sm-10">
-<input type="text" name="rollid" class="form-control" id="rollid" maxlength="5" required="required" autocomplete="off">
+<input type="text" name="doanhnghiep" class="form-control" id="doanhnghiep"  required="required" autocomplete="off">
 </div>
 </div>
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Email id)</label>
+<label for="default" class="col-sm-2 control-label">Số điện thoại</label>
 <div class="col-sm-10">
-<input type="email" name="emailid" class="form-control" id="email" required="required" autocomplete="off">
+<input type="text" name="dienthoai" class="form-control" id="dienthoai"  required="required" placeholder="0123456789" title="Vui lòng nhập đúng định dạng số điện thoại !" pattern="0[0-9\s.-]{9,13}" autocomplete="off">    
 </div>
 </div>
-
-
 
 <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Gender</label>
+<label for="default" class="col-sm-2 control-label">Tài khoản</label>
 <div class="col-sm-10">
-<input type="radio" name="gender" value="Male" required="required" checked="">Male <input type="radio" name="gender" value="Female" required="required">Female <input type="radio" name="gender" value="Other" required="required">Other
+<input type="text"  name="taikhoan" class="form-control"required="required" autocomplete="off">    
 </div>
 </div>
 
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Mật khẩu</label>
+<div class="col-sm-10">
+<input type="password" name="matkhau" class="form-control" id="matkhau"  required="required"  autocomplete="off">    
+</div>
+</div>
 
+<!-- TEST OPTION ĐỊA CHỈ -->
 
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Địa chỉ</label>
+<div class="col-sm-10">
+<input type="text" name="diachi" class="form-control" id="madiachi"  required="required" autocomplete="off">    
+</div>
+</div>
 
-
-
-
-
-
-
-                                                    <div class="form-group">
-                                                        <label for="default" class="col-sm-2 control-label">Class</label>
-                                                        <div class="col-sm-10">
- <select name="class" class="form-control" id="default" required="required">
-<option value="">Select Class</option>
-<?php $sql = "SELECT * from tblclasses";
+<div class="form-group">
+<label for="default" class="col-sm-2 control-label">Thành phố</label>
+ <div class="col-sm-10">
+ <select name="matp" class="form-control clid" id="matp" onChange="getQuan(this.value);" required="required">
+<option value="">Chọn thành phố</option>
+<?php $sql = "SELECT * from thanhpho";
 $query = $dbh->prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -165,23 +227,33 @@ if($query->rowCount() > 0)
 {
 foreach($results as $result)
 {   ?>
-<option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?>&nbsp; Section-<?php echo htmlentities($result->Section); ?></option>
+<option value="<?php echo htmlentities($result->MaTP); ?>"><?php echo htmlentities($result->TenTat); ?>&nbsp; - <?php echo htmlentities($result->TenTP); ?></option>
 <?php }} ?>
  </select>
                                                         </div>
                                                     </div>
-<div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label">DOB</label>
+
+                                                    <div class="form-group">
+                                                        <label for="date" class="col-sm-2 control-label ">Quận</label>
                                                         <div class="col-sm-10">
-                                                            <input type="date"  name="dob" class="form-control" id="date">
+                                                    <select name="maquan" class="form-control stid" id="maquan" required="required" onChange="getPhuong(this.value);">
+                                                    </select>
                                                         </div>
                                                     </div>
+
+                                                    <div class="form-group">
+                                                        <label for="date" class="col-sm-2 control-label ">Phường</label>
+                                                        <div class="col-sm-10">
+                                                    <select name="maphuong" class="form-control stid" id="maphuong" required="required" >
+                                                    </select>
+                                                        </div>
+                                                    </div>                                          
                                                     
 
-                                                    
+<!-- TEST OPTION ĐỊA CHỈ -->                                                  
                                                     <div class="form-group">
                                                         <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" class="btn btn-primary">Add</button>
+                                                            <button type="submit" name="submit" class="btn btn-primary">Thêm</button>
                                                         </div>
                                                     </div>
                                                 </form>

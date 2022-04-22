@@ -51,7 +51,7 @@ $error="Something went wrong. Please try again";
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>SMS Admin| Add Result </title>
+        <title>Admin | Thống kê </title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -59,50 +59,8 @@ $error="Something went wrong. Please try again";
         <link rel="stylesheet" href="css/prism/prism.css" media="screen" >
         <link rel="stylesheet" href="css/select2/select2.min.css" >
         <link rel="stylesheet" href="css/main.css" media="screen" >
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
         <script src="js/modernizr/modernizr.min.js"></script>
-        <script>
-function getStudent(val) {
-    $.ajax({
-    type: "POST",
-    url: "get_student.php",
-    data:'classid='+val,
-    success: function(data){
-        $("#studentid").html(data);
-        
-    }
-    });
-$.ajax({
-        type: "POST",
-        url: "get_student.php",
-        data:'classid1='+val,
-        success: function(data){
-            $("#subject").html(data);
-            
-        }
-        });
-}
-    </script>
-<script>
-
-function getresult(val,clid) 
-{   
-    
-var clid=$(".clid").val();
-var val=$(".stid").val();;
-var abh=clid+'$'+val;
-//alert(abh);
-    $.ajax({
-        type: "POST",
-        url: "get_student.php",
-        data:'studclass='+abh,
-        success: function(data){
-            $("#reslt").html(data);
-            
-        }
-        });
-}
-</script>
-
 
     </head>
     <body class="top-navbar-fixed">
@@ -123,7 +81,7 @@ var abh=clid+'$'+val;
                      <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Declare Result</h2>
+                                    <h2 class="title">Thống kê</h2>
                                 
                                 </div>
                                 
@@ -133,9 +91,9 @@ var abh=clid+'$'+val;
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                                        <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
                                 
-                                        <li class="active">Student Result</li>
+                                        <li class="active">Thống kê</li>
                                     </ul>
                                 </div>
                              
@@ -149,68 +107,184 @@ var abh=clid+'$'+val;
                                         <div class="panel">
                                            
                                             <div class="panel-body">
-<?php if($msg){?>
-<div class="alert alert-success left-icon-alert" role="alert">
- <strong>Well done!</strong><?php echo htmlentities($msg); ?>
- </div><?php } 
-else if($error){?>
-    <div class="alert alert-danger left-icon-alert" role="alert">
-                                            <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
-                                        </div>
-                                        <?php } ?>
-                                                <form class="form-horizontal" method="post">
 
- <div class="form-group">
-<label for="default" class="col-sm-2 control-label">Class</label>
- <div class="col-sm-10">
- <select name="class" class="form-control clid" id="classid" onChange="getStudent(this.value);" required="required">
-<option value="">Select Class</option>
-<?php $sql = "SELECT * from tblclasses";
-$query = $dbh->prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{   ?>
-<option value="<?php echo htmlentities($result->id); ?>"><?php echo htmlentities($result->ClassName); ?>&nbsp; Section-<?php echo htmlentities($result->Section); ?></option>
-<?php }} ?>
- </select>
-                                                        </div>
-                                                    </div>
-<div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label ">Student Name</label>
-                                                        <div class="col-sm-10">
-                                                    <select name="studentid" class="form-control stid" id="studentid" required="required" onChange="getresult(this.value);">
-                                                    </select>
-                                                        </div>
-                                                    </div>
+    <form class="form-horizontal" method="post" >
+    <div class="row">
+      <div class="col-sm-6">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="col-sm-6">
+        <canvas id="SLBT"></canvas>
+      </div>
+    </div>
+    
+ 
+      </form>
+      <script>
+      let myChart = document.getElementById('canvas').getContext('2d');
+      // Global Options
+      // Chart.defaults.global.defaultFontFamily = 'Lato';
+      Chart.defaults.global.defaultFontSize = 18;
+      Chart.defaults.global.defaultFontColor = '#111';
 
-                                                    <div class="form-group">
-                                                      
-                                                        <div class="col-sm-10">
-                                                    <div  id="reslt">
-                                                    </div>
-                                                        </div>
-                                                    </div>
-                                                    
-<div class="form-group">
-                                                        <label for="date" class="col-sm-2 control-label">Subjects</label>
-                                                        <div class="col-sm-10">
-                                                    <div  id="subject">
-                                                    </div>
-                                                        </div>
-                                                    </div>
+      let massPopChart = new Chart(myChart, {
+        type:'pie', //loại biểu đồ: bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data:{
+          labels:[
+          <?php
+            include('includes/ketnoi.php');
+            $data = '';
+            $tv="select * from trangthai";
+            $tv_1=mysqli_query($connect,$tv);
+            while($tv_2=mysqli_fetch_array($tv_1))
+            {
+              if($tv_2!=false)
+              {
+                echo "'".$tv_2['TrangThai']."',";
+                //lấy data
+                $tvc="select COUNT(MaBaoTri) as status from chitietbaotri where MaTrangThai = '". $tv_2['MaTrangThai'] ."'";
+                $tvc_1=mysqli_query($connect,$tvc);
+                while($tvc_2=mysqli_fetch_array($tvc_1))
+                {
+                  if($tvc_2!=false)
+                  {
+                    $data = $data.$tvc_2['status'].",";
+                  }
+                }
+              }
+            }
+          ?>
+          ],
+          datasets:[{
+            label:'Population',
+            data:[
+              <?php echo $data; ?>
+            ],
+            //backgroundColor:'green',
+            backgroundColor:[
+              'rgba(255, 99, 132)',
+              'rgba(54, 162, 235)',
+              'rgba(153, 102, 255)',
+              'rgba(255, 159, 64)',
+              'rgba(39,123,74)',
+              'rgba(16,0,103)',
+              'rgba(204,0,0)'
+            ],
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:3,
+            hoverBorderColor:'#000'
+          }]
+        },
+        options:{
+          title:{
+            display:true,
+            text:'Biểu đồ trạng thái bảo trì',
+            fontSize:25
+          },
+          legend:{
+            display:true,
+            position:'right',
+            labels:{
+              fontColor:'#000'
+            }
+          },
+          layout:{
+            padding:{
+              left:50,
+              right:0,
+              bottom:0,
+              top:0
+            }
+          },
+          tooltips:{
+            enabled:true
+          }
+        }
+      });
+    </script>
+    <script>
+      let SLBT = document.getElementById('SLBT').getContext('2d');
+      // Global Options
+      // Chart.defaults.global.defaultFontFamily = 'Lato';
+      Chart.defaults.global.defaultFontSize = 18;
+      Chart.defaults.global.defaultFontColor = '#111';
 
-
-                                                    
-                                                    <div class="form-group">
-                                                        <div class="col-sm-offset-2 col-sm-10">
-                                                            <button type="submit" name="submit" id="submit" class="btn btn-primary">Declare Result</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-
+      let SLBT1 = new Chart(SLBT, {
+        type:'bar', //loại biểu đồ: bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data:{
+          labels:[
+          <?php
+            include('includes/ketnoi.php');
+            $data = '';
+            $tv="select * from thanhpho";
+            $tv_1=mysqli_query($connect,$tv);
+            while($tv_2=mysqli_fetch_array($tv_1))
+            {
+              if($tv_2!=false)
+              {
+                echo "'".$tv_2['TenTP']."',";
+                //lấy data
+                $tvc="SELECT COUNT(baotri.MaBaoTri) as sl 
+                from baotri
+                left join khachhang on khachhang.MaKhachHang =baotri.MaKhachHang 
+                left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi 
+                left join phuong on diachi.MaPhuong = phuong.MaPhuong
+                left join quan on phuong.MaQuan = quan.MaQuan
+                left join thanhpho on quan.MaTP = thanhpho.MaTP
+                WHERE  thanhpho.TenTP ='". $tv_2['TenTP'] ."'";
+                $tvc_1=mysqli_query($connect,$tvc);
+                while($tvc_2=mysqli_fetch_array($tvc_1))
+                {
+                  if($tvc_2!=false)
+                  {
+                    $data = $data.$tvc_2['sl'].",";
+                  }
+                }
+              }
+            }
+          ?>
+          ],
+          datasets:[{
+            label:'Số lượng bảo trì',
+            data:[
+              <?php echo $data; ?>
+            0,],
+            backgroundColor:[
+            ],
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:3,
+            hoverBorderColor:'#000'
+          }]
+        },
+        options:{
+          title:{
+            display:true,
+            text:'Biểu đồ số lượng bảo trì các thành phố',
+            fontSize:25
+          },
+          legend:{
+            display:true,
+            position:'right',
+            labels:{
+              fontColor:'#000'
+            }
+          },
+          layout:{
+            padding:{
+              left:50,
+              right:0,
+              bottom:0,
+              top:0
+            }
+          },
+          tooltips:{
+            enabled:true
+          }
+        }
+      });
+    </script>
                                             </div>
                                         </div>
                                     </div>
