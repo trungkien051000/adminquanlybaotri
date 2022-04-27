@@ -53,16 +53,16 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-primary" href="manage-students.php">
+                                        <a class="dashboard-stat bg-primary" href="quanly-khachhang.php">
 <?php 
-$sql1 ="SELECT StudentId from tblstudents ";
+$sql1 ="SELECT MaKhachHang from khachhang ";
 $query1 = $dbh -> prepare($sql1);
 $query1->execute();
 $results1=$query1->fetchAll(PDO::FETCH_OBJ);
-$totalstudents=$query1->rowCount();
+$totalKhachHang=$query1->rowCount();
 ?>
 
-                                            <span class="number counter"><?php echo htmlentities($totalstudents);?></span>
+                                            <span class="number counter"><?php echo htmlentities($totalKhachHang);?></span>
                                             <span class="name">Khách hàng</span>
                                             <span class="bg-icon"><i class="fa fa-users"></i></span>
                                         </a>
@@ -71,15 +71,15 @@ $totalstudents=$query1->rowCount();
                                     <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
 
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-danger" href="manage-subjects.php">
+                                        <a class="dashboard-stat bg-danger" href="quanly-nhanvien.php">
 <?php 
-$sql ="SELECT id from  tblsubjects ";
+$sql ="SELECT MaNhanVien from  nhanvien ";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
-$totalsubjects=$query->rowCount();
+$totalNhanVien=$query->rowCount();
 ?>
-                                            <span class="number counter"><?php echo htmlentities($totalsubjects);?></span>
+                                            <span class="number counter"><?php echo htmlentities($totalNhanVien);?></span>
                                             <span class="name">Nhân Viên</span>
                                             <span class="bg-icon"><i class="fa fa-users"></i></span>
                                         </a>
@@ -88,15 +88,15 @@ $totalsubjects=$query->rowCount();
                                     <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
 
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-warning" href="manage-classes.php">
+                                        <a class="dashboard-stat bg-warning" href="quanly-baotri.php">
                                         <?php 
-$sql2 ="SELECT id from  tblclasses ";
+$sql2 ="SELECT MaBaoTri from  baotri ";
 $query2 = $dbh -> prepare($sql2);
 $query2->execute();
 $results2=$query2->fetchAll(PDO::FETCH_OBJ);
-$totalclasses=$query2->rowCount();
+$totalBaoTri=$query2->rowCount();
 ?>
-                                            <span class="number counter"><?php echo htmlentities($totalclasses);?></span>
+                                            <span class="number counter"><?php echo htmlentities($totalBaoTri);?></span>
                                             <span class="name">Danh sách lịch bảo trì</span>
                                             <span class="bg-icon"><i class="fa fa-book"></i></span>
                                         </a>

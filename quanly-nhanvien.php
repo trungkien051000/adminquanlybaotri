@@ -8,6 +8,7 @@ if(strlen($_SESSION['alogin'])=="")
     header("Location: index.php"); 
     }
     else{
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +16,7 @@ if(strlen($_SESSION['alogin'])=="")
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Admin Manage Classes</title>
+        <title>Quản lý nhân viên</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" media="screen" >
         <link rel="stylesheet" href="css/font-awesome.min.css" media="screen" >
         <link rel="stylesheet" href="css/animate-css/animate.min.css" media="screen" >
@@ -57,7 +58,7 @@ if(strlen($_SESSION['alogin'])=="")
                         <div class="container-fluid">
                             <div class="row page-title-div">
                                 <div class="col-md-6">
-                                    <h2 class="title">Manage Classes</h2>
+                                    <h2 class="title">Quản lý nhân viên</h2>
                                 
                                 </div>
                                 
@@ -67,9 +68,9 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="row breadcrumb-div">
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
-            							<li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
-                                        <li> Classes</li>
-            							<li class="active">Manage Classes</li>
+            							<li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
+                                        <li> Nhân viên</li>
+            							<li class="active">Quản lý nhân viên</li>
             						</ul>
                                 </div>
                              
@@ -89,16 +90,16 @@ if(strlen($_SESSION['alogin'])=="")
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>View Classes Info</h5>
+                                                    <h5>Xem thông tin nhân viên</h5>
                                                 </div>
                                             </div>
 <?php if($msg){?>
 <div class="alert alert-success left-icon-alert" role="alert">
- <strong>Well done!</strong><?php echo htmlentities($msg); ?>
+ <strong>Hoàn tất!</strong><?php echo htmlentities($msg); ?>
  </div><?php } 
 else if($error){?>
     <div class="alert alert-danger left-icon-alert" role="alert">
-                                            <strong>Oh snap!</strong> <?php echo htmlentities($error); ?>
+                                            <strong>Thất bại!</strong> <?php echo htmlentities($error); ?>
                                         </div>
                                         <?php } ?>
                                             <div class="panel-body p-20">
@@ -107,25 +108,28 @@ else if($error){?>
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>Class Name</th>
-                                                            <th>Class Name Numeric</th>
-                                                            <th>Section</th>
-                                                            <th>Creation Date</th>
-                                                            <th>Action</th>
+                                                            <th>Họ tên</th>
+                                                            <th>Email</th>
+                                                            <th>Số điện thoại</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Tài khoản</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
-                                                        <tr>
-                                                          <th>#</th>
-                                                            <th>Class Name</th>
-                                                            <th>Class Name Numeric</th>
-                                                            <th>Section</th>
-                                                            <th>Creation Date</th>
-                                                            <th>Action</th>
+                                                    <tr>
+                                                            <th>#</th>
+                                                            <th>Họ tên</th>
+                                                            <th>Email</th>
+                                                            <th>Số điện thoại</th>
+                                                            <th>Địa chỉ</th>
+                                                            <th>Tài khoản</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-<?php $sql = "SELECT * from tblclasses";
+<?php $sql = "SELECT nhanvien.MaNhanVien,nhanvien.HoTen,nhanvien.Email,nhanvien.DienThoai,nhanvien.TaiKhoan,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP
+            from nhanvien left join diachi on diachi.MaDiaChi = nhanvien.MaDiaChi left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP";
 $query = $dbh->prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -136,13 +140,14 @@ foreach($results as $result)
 {   ?>
 <tr>
  <td><?php echo htmlentities($cnt);?></td>
-                                                            <td><?php echo htmlentities($result->ClassName);?></td>
-                                                            <td><?php echo htmlentities($result->ClassNameNumeric);?></td>
-                                                            <td><?php echo htmlentities($result->Section);?></td>
-                                                            <td><?php echo htmlentities($result->CreationDate);?></td>
+                                                            <td><?php echo htmlentities($result->HoTen);?></td>
+                                                            <td><?php echo htmlentities($result->Email);?></td>
+                                                            <td><?php echo htmlentities($result->DienThoai);?></td>
+                                                            <td><?php echo htmlentities($result->DiaChi);?>, <?php echo htmlentities($result->TenPhuong);?>, <?php echo htmlentities($result->TenQuan);?>, <?php echo htmlentities($result->TenTP);?></td>
+                                                            <td><?php echo htmlentities($result->TaiKhoan);?></td>
 <td>
-<a href="edit-class.php?classid=<?php echo htmlentities($result->id);?>"><i class="fa fa-edit" title="Edit Record"></i> </a> 
-
+<a href="sua-nhanvien.php?idnv=<?php echo htmlentities($result->MaNhanVien);?>"><i class="fa fa-edit" title="Chỉnh sửa"></i> </a> 
+<a href="deletenv.php?idnv=<?php echo htmlentities($result->MaNhanVien);?>" onclick="return confirm('Bạn có muốn xóa ?');" ><i class="fa fa-trash-o" title="Xóa"></i> </a> 
 </td>
 </tr>
 <?php $cnt=$cnt+1;}} ?>
