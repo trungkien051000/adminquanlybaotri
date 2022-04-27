@@ -9,7 +9,7 @@ if(strlen($_SESSION['alogin'])=="")
     else{
 if(isset($_POST['Update']))
 {
-$cid=intval($_GET['classid']);
+$mabt=intval($_GET['idbt']);
 $tieude=$_POST['tieude'];
 $mota=$_POST['mota']; 
 $thietbi=$_POST['thietbi'];
@@ -37,10 +37,10 @@ set
     chitietbaotri.TienDo=:tiendo,
     chitietbaotri.MaTrangThai=:trangthai
 where 
-    baotri.MaBaoTri =:cid AND
+    baotri.MaBaoTri =:mabt AND
     baotri.MaBaoTri = chitietbaotri.MaBaoTri  ;";
 $query = $dbh->prepare($sql);
-$query->bindParam(':cid',$cid,PDO::PARAM_STR);
+$query->bindParam(':mabt',$mabt,PDO::PARAM_STR);
 $query->bindParam(':nhanvien',$nhanvien,PDO::PARAM_STR);
 $query->bindParam(':khachhang',$khachhang,PDO::PARAM_STR);
 $query->bindParam(':tieude',$tieude,PDO::PARAM_STR);
@@ -102,7 +102,7 @@ $msg="Lịch bảo trì đã được cập nhật thành công !";
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
                                         <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
-                                        <li> <a href="manage-classes.php">Lịch bảo trì</a></li>
+                                        <li> <a href="quanly-baotri.php">Lịch bảo trì</a></li>
                                         <li class="active">Cập nhật lịch bảo trì</li>
                                     </ul>
                                 </div>
@@ -133,16 +133,16 @@ else if($error){?>
                                                 <form class="form-horizontal" method="post">
 
  <?php
-$cid=intval($_GET['classid']);
-$sql = "SELECT baotri.MaBaoTri,nhanvien.HoTen as htnv,khachhang.HoTen as htkh,binhluan.NoiDung,baotri.TieuDe,baotri.MoTa,thietbi.TenThietBi,chitietbaotri.NgayBatDau,chitietbaotri.NgayKetThuc,chitietbaotri.NgayHoanThanh,chitietbaotri.TienDo,trangthai.TrangThai,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
+$mabt=intval($_GET['idbt']);
+$sql = "SELECT nhanvien.MaNhanVien, khachhang.MaKhachHang, thietbi.MaThietBi, baotri.MaBaoTri,nhanvien.HoTen as htnv,khachhang.HoTen as htkh,binhluan.NoiDung,baotri.TieuDe,baotri.MoTa,thietbi.TenThietBi,chitietbaotri.NgayBatDau,chitietbaotri.NgayKetThuc,chitietbaotri.NgayHoanThanh,chitietbaotri.TienDo,trangthai.TrangThai,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
 from baotri left join nhanvien on nhanvien.MaNhanVien = baotri.MaNhanVien left join khachhang on khachhang.MaKhachHang =baotri.MaKhachHang 
 left join chitietbaotri on chitietbaotri.MaBaoTri = baotri.MaBaoTri left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi 
 left join binhluan on binhluan.MaBinhLuan = baotri.MaBinhLuan left join thietbi on thietbi.MaThietBi = chitietbaotri.MaThietBi
 left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP
 left join trangthai on chitietbaotri.MaTrangThai = trangthai.MaTrangThai
-where baotri.MaBaoTri=:cid";
+where baotri.MaBaoTri=:mabt";
 $query = $dbh->prepare($sql);
-$query->bindParam(':cid',$cid,PDO::PARAM_STR);
+$query->bindParam(':mabt',$mabt,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -150,9 +150,9 @@ if($query->rowCount() > 0)
 {   
     foreach($results as $result)
     {  
-        $hotennhanvien = $result->htnv;
-        $hotenkhachhang= $result->htkh;
-        $tenthietbi = $result->TenThietBi;
+        $idnhanvien = $result->MaNhanVien;
+        $idkhachhang= $result->MaKhachHang;
+        $idthietbi = $result->MaThietBi;
         $diachi = $result->DiaChi;
         $phuong = $result->TenPhuong;
         $quan = $result->TenQuan;
@@ -194,7 +194,7 @@ if($query->rowCount() > 0)
                     {
                     foreach($results as $result)
                     {   
-                        if( $result->TenThietBi == $tenthietbi )
+                        if( $result->MaThietBi == $idthietbi )
                         {
                         ?>
                          <option value="<?php echo htmlentities($result->MaThietBi)?>" selected><?php echo htmlentities($result->TenThietBi) ?></option>
@@ -224,7 +224,7 @@ if($query->rowCount() > 0)
                     {
                     foreach($results as $result)
                     {   
-                        if( $result->HoTen == $hotennhanvien )
+                        if( $result->MaNhanVien == $idnhanvien )
                         {
                         ?>
                          <option value="<?php echo htmlentities($result->MaNhanVien)?>" selected><?php echo htmlentities($result->MaNhanVien)?> - <?php echo htmlentities($result->HoTen) ?></option>
@@ -259,7 +259,7 @@ if($query->rowCount() > 0)
                     {
                     foreach($results as $result)
                     {   
-                        if( $result->HoTen == $hotenkhachhang )
+                        if( $result->MaKhachHang == $idkhachhang )
                         {
                         ?>
                          <option value="<?php echo htmlentities($result->MaKhachHang)?>" selected><?php echo htmlentities($result->HoTen) ?>. Địa chỉ: <?php echo $diachi ?>, <?php echo $phuong ?>, <?php echo $quan ?>, <?php echo $tp ?></option>
@@ -279,16 +279,16 @@ if($query->rowCount() > 0)
     <?php }} ?>  
 
     <?php
-$cid=intval($_GET['classid']);
+$mabt=intval($_GET['idbt']);
 $sql = "SELECT baotri.MaBaoTri,nhanvien.HoTen as htnv,khachhang.HoTen as htkh,binhluan.NoiDung,baotri.TieuDe,baotri.MoTa,thietbi.TenThietBi,chitietbaotri.NgayBatDau,chitietbaotri.NgayKetThuc,chitietbaotri.NgayHoanThanh,chitietbaotri.TienDo,trangthai.TrangThai,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
 from baotri left join nhanvien on nhanvien.MaNhanVien = baotri.MaNhanVien left join khachhang on khachhang.MaKhachHang =baotri.MaKhachHang 
 left join chitietbaotri on chitietbaotri.MaBaoTri = baotri.MaBaoTri left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi 
 left join binhluan on binhluan.MaBinhLuan = baotri.MaBinhLuan left join thietbi on thietbi.MaThietBi = chitietbaotri.MaThietBi
 left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP
 left join trangthai on chitietbaotri.MaTrangThai = trangthai.MaTrangThai
-where baotri.MaBaoTri=:cid";
+where baotri.MaBaoTri=:mabt";
 $query = $dbh->prepare($sql);
-$query->bindParam(':cid',$cid,PDO::PARAM_STR);
+$query->bindParam(':mabt',$mabt,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;

@@ -53,7 +53,7 @@ if(strlen($_SESSION['alogin'])=="")
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-primary" href="manage-students.php">
+                                        <a class="dashboard-stat bg-primary" href="quanly-khachhang.php">
 <?php 
 $sql1 ="SELECT MaKhachHang from khachhang ";
 $query1 = $dbh -> prepare($sql1);
@@ -71,7 +71,7 @@ $totalKhachHang=$query1->rowCount();
                                     <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
 
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-danger" href="manage-subjects.php">
+                                        <a class="dashboard-stat bg-danger" href="quanly-nhanvien.php">
 <?php 
 $sql ="SELECT MaNhanVien from  nhanvien ";
 $query = $dbh -> prepare($sql);
@@ -88,7 +88,7 @@ $totalNhanVien=$query->rowCount();
                                     <!-- /.col-lg-3 col-md-3 col-sm-6 col-xs-12 -->
 
                                     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                                        <a class="dashboard-stat bg-warning" href="manage-classes.php">
+                                        <a class="dashboard-stat bg-warning" href="quanly-baotri.php">
                                         <?php 
 $sql2 ="SELECT MaBaoTri from  baotri ";
 $query2 = $dbh -> prepare($sql2);

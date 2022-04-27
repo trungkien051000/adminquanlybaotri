@@ -90,7 +90,7 @@ if(strlen($_SESSION['alogin'])=="")
                                         <div class="panel">
                                             <div class="panel-heading">
                                                 <div class="panel-title">
-                                                    <h5>Xem thông tin sinh viên</h5>
+                                                    <h5>Xem thông tin nhân viên</h5>
                                                 </div>
                                             </div>
 <?php if($msg){?>
@@ -146,8 +146,8 @@ foreach($results as $result)
                                                             <td><?php echo htmlentities($result->DiaChi);?>, <?php echo htmlentities($result->TenPhuong);?>, <?php echo htmlentities($result->TenQuan);?>, <?php echo htmlentities($result->TenTP);?></td>
                                                             <td><?php echo htmlentities($result->TaiKhoan);?></td>
 <td>
-<a href="edit-subject.php?subjectid=<?php echo htmlentities($result->MaNhanVien);?>"><i class="fa fa-edit" title="Edit Record"></i> </a> 
-
+<a href="sua-nhanvien.php?idnv=<?php echo htmlentities($result->MaNhanVien);?>"><i class="fa fa-edit" title="Chỉnh sửa"></i> </a> 
+<a href="deletenv.php?idnv=<?php echo htmlentities($result->MaNhanVien);?>" onclick="return confirm('Bạn có muốn xóa ?');" ><i class="fa fa-trash-o" title="Xóa"></i> </a> 
 </td>
 </tr>
 <?php $cnt=$cnt+1;}} ?>

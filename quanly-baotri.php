@@ -68,7 +68,7 @@ if(strlen($_SESSION['alogin'])=="")
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
             							<li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
-                                        <li> <a href="manage-classes.php">Lịch bảo trì</a></li>
+                                        <li> <a href="quanly-baotri.php">Lịch bảo trì</a></li>
             							<li class="active">Danh sách lịch bảo trì</li>
             						</ul>
                                 </div>
@@ -109,6 +109,7 @@ else if($error){?>
                                                             <th>#</th>
                                                             <th>Tiêu đề</th>
                                                             <th>Mô tả</th>
+                                                            <th>Thiết bị</th>
                                                             <th>Nhân viên bảo trì</th>
                                                             <th>Khách hàng</th>
                                                             <th>Tiến độ</th>
@@ -121,6 +122,7 @@ else if($error){?>
                                                             <th>#</th>
                                                             <th>Tiêu đề</th>
                                                             <th>Mô tả</th>
+                                                            <th>Thiết bị</th>
                                                             <th>Nhân viên bảo trì</th>
                                                             <th>Khách hàng</th>
                                                             <th>Tiến độ</th>
@@ -129,12 +131,16 @@ else if($error){?>
                                                         </tr>
                                                     </tfoot>
                                                     <tbody>
-<?php $sql = "select baotri.MaBaoTri,baotri.TieuDe,baotri.MoTa,nhanvien.HoTen as htnv,khachhang.HoTen as htkh, chitietbaotri.TienDo,trangthai.TrangThai
-FROM baotri,chitietbaotri,nhanvien,khachhang, trangthai
+<?php $sql = "select baotri.MaBaoTri,baotri.TieuDe,baotri.MoTa,nhanvien.HoTen as htnv,khachhang.HoTen as htkh, chitietbaotri.TienDo,trangthai.TrangThai, thietbi.TenThietBi
+FROM baotri,chitietbaotri,nhanvien,khachhang, trangthai, thietbi
+
 WHERE baotri.MaBaoTri = chitietbaotri.MaBaoTri
+AND chitietbaotri.MaBaoTri = thietbi.MaThietBi
 AND baotri.MaNhanVien = nhanvien.MaNhanVien
 AND baotri.MaKhachHang = khachhang.MaKhachHang
-AND chitietbaotri.MaTrangThai = trangthai.MaTrangThai"
+AND chitietbaotri.MaTrangThai = trangthai.MaTrangThai
+
+ORDER BY baotri.MaBaoTri ASC"
 ;
 $query = $dbh->prepare($sql);
 $query->execute();
@@ -148,13 +154,14 @@ foreach($results as $result)
  <td><?php echo htmlentities($cnt);?></td>
                                                             <td><?php echo htmlentities($result->TieuDe);?></td>
                                                             <td><?php echo htmlentities($result->MoTa);?></td>
+                                                            <td><?php echo htmlentities($result->TenThietBi);?></td>
                                                             <td><?php echo htmlentities($result->htnv);?></td>
                                                             <td><?php echo htmlentities($result->htkh);?></td>
                                                             <td><?php echo htmlentities($result->TienDo);?></td>
                                                             <td><?php echo htmlentities($result->TrangThai);?></td>
 <td>
-<a href="edit-class.php?classid=<?php echo htmlentities($result->MaBaoTri);?>"><i class="fa fa-edit" title="Edit Record"></i> </a> 
-
+<a href="sua-baotri.php?idbt=<?php echo htmlentities($result->MaBaoTri);?>"><i class="fa fa-edit" title="Chỉnh sửa"></i> </a> 
+<a href="deletebaotri.php?idbt=<?php echo htmlentities($result->MaBaoTri);?>" onclick="return confirm('Bạn có muốn xóa ?');" ><i class="fa fa-trash-o" title="Xóa"></i> </a> 
 </td>
 </tr>
 <?php $cnt=$cnt+1;}} ?>

@@ -119,7 +119,7 @@ function getPhuong(val) {
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
                                         <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
-                                        <li><a href="manage-subjects.php"> Nhân viên </a></li>
+                                        <li><a href="quanly-nhanvien.php"> Nhân viên </a></li>
                                         <li class="active">Thêm nhân viên</li>
                                     </ul>
                                 </div>

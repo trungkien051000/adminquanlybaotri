@@ -8,7 +8,7 @@ if(strlen($_SESSION['alogin'])=="")
     }
     else{
 
-$stid=intval($_GET['stid']);
+$makh=intval($_GET['idkh']);
 
 if(isset($_POST['submit']))
 {
@@ -33,7 +33,7 @@ set
     diachi.MaPhuong=:maphuong ,
     diachi.DiaChi=:diachi
 where 
-    khachhang.MaKhachHang =:stid AND
+    khachhang.MaKhachHang =:makh AND
     khachhang.MaDiaChi = diachi.MaDiaChi  ;";
 $query = $dbh->prepare($sql);
 $query->bindParam(':hoten',$hoten,PDO::PARAM_STR);
@@ -42,7 +42,7 @@ $query->bindParam(':dienthoai',$dienthoai,PDO::PARAM_STR);
 $query->bindParam(':matkhau',$matkhau,PDO::PARAM_STR);
 $query->bindParam(':maphuong',$maphuong,PDO::PARAM_STR);
 $query->bindParam(':diachi',$diachi,PDO::PARAM_STR);
-$query->bindParam(':stid',$stid,PDO::PARAM_STR);
+$query->bindParam(':makh',$makh,PDO::PARAM_STR);
 $query->execute();
 
 $msg="Thông tin khách hàng đã thay đổi thành công !";
@@ -123,7 +123,7 @@ function getPhuong(val) {
                                     <ul class="breadcrumb">
                                         <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
                                 
-                                        <li class="active"><a href="manage-students.php">Khách hàng</a></li>
+                                        <li class="active"><a href="quanly-khachhang.php">Khách hàng</a></li>
                                         <li class="active">Cập nhật thông tin</li>
                                     </ul>
                                 </div>
@@ -156,9 +156,9 @@ else if($error){?>
 
 $sql = "SELECT *,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
         from khachhang left join diachi on diachi.MaDiaChi = khachhang.MaDiaChi left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP 
-        where khachhang.MaKhachHang=:stid";
+        where khachhang.MaKhachHang=:makh";
 $query = $dbh->prepare($sql);
-$query->bindParam(':stid',$stid,PDO::PARAM_STR);
+$query->bindParam(':makh',$makh,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;

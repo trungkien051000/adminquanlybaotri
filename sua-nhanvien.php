@@ -9,7 +9,7 @@ if(strlen($_SESSION['alogin'])=="")
     else{
 if(isset($_POST['Update']))
 {
-$sid=intval($_GET['subjectid']);
+$manv=intval($_GET['idnv']);
 $hoten=$_POST['hoten'];
 $ngaysinh=$_POST['ngaysinh']; 
 $gioitinh=$_POST['gioitinh'];
@@ -33,7 +33,7 @@ set
     diachi.MaPhuong=:phuong ,
     diachi.DiaChi=:diachi
 where 
-    nhanvien.MaNhanVien =:sid AND
+    nhanvien.MaNhanVien =:manv AND
     nhanvien.MaDiaChi = diachi.MaDiaChi  ;";
 $query = $dbh->prepare($sql);
 $query->bindParam(':hoten',$hoten,PDO::PARAM_STR);
@@ -44,7 +44,7 @@ $query->bindParam(':dienthoai',$dienthoai,PDO::PARAM_STR);
 $query->bindParam(':matkhau',$matkhau,PDO::PARAM_STR);
 $query->bindParam(':phuong',$phuong,PDO::PARAM_STR);
 $query->bindParam(':diachi',$diachi,PDO::PARAM_STR);
-$query->bindParam(':sid',$sid,PDO::PARAM_STR);
+$query->bindParam(':manv',$manv,PDO::PARAM_STR);
 $query->execute();
 
 $msg="Thông tin nhân viên đã thay đổi thành công !";
@@ -122,7 +122,7 @@ function getPhuong(val) {
                                 <div class="col-md-6">
                                     <ul class="breadcrumb">
                                         <li><a href="dashboard.php"><i class="fa fa-home"></i> Trang chủ</a></li>
-                                        <li> <a href="manage-subjects.php">Nhân viên</a></li>
+                                        <li> <a href="quanly-nhanvien.php">Nhân viên</a></li>
                                         <li class="active">Cập nhật thông tin</li>
                                     </ul>
                                 </div>
@@ -153,12 +153,12 @@ else if($error){?>
                                                 <form class="form-horizontal" method="post">
 
  <?php
-$sid=intval($_GET['subjectid']);
+$manv=intval($_GET['idnv']);
 $sql = "SELECT * ,diachi.DiaChi,phuong.TenPhuong,quan.TenQuan,thanhpho.TenTP 
 from nhanvien left join diachi on diachi.MaDiaChi = nhanvien.MaDiaChi left join phuong on diachi.MaPhuong = phuong.MaPhuong left join quan on phuong.MaQuan = quan.MaQuan left join thanhpho on quan.MaTP = thanhpho.MaTP 
-where nhanvien.MaNhanVien=:sid";
+where nhanvien.MaNhanVien=:manv";
 $query = $dbh->prepare($sql);
-$query->bindParam(':sid',$sid,PDO::PARAM_STR);
+$query->bindParam(':manv',$manv,PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
